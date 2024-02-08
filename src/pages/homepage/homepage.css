@@ -1,0 +1,49 @@
+/* Tailwind CSS */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+
+.pagination li {
+  margin: 0 2px;
+}
+
+.pagination a,
+.pagination .prev,
+.pagination .next {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  background-color: #edf2f7;
+  color: #4a5568;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.pagination a:hover,
+.pagination .prev:hover,
+.pagination .next:hover {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+
+.pagination .active a {
+  background-color: #4299e1;
+  color: white;
+}
+
+.pagination .disabled a {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .pagination a,
+  .pagination .prev,
+  .pagination .next {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem; /* Adjust font size for smaller screens */
+  }
+}
