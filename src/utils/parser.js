@@ -1,4 +1,3 @@
-// utils.js
 export const parseHTML = (html) => {
   const temp = document.createElement("div");
   temp.innerHTML = html;

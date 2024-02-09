@@ -1,5 +1,7 @@
+import PropTypes from "prop-types"; 
+
 import { Link } from "react-router-dom";
-import { parseHTML } from "../utils.js/parser";
+import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { useState } from "react";
 
@@ -44,6 +46,16 @@ const RecipeCard = ({ recipe }) => {
       </div>
     </div>
   );
+};
+
+// Add prop validation
+RecipeCard.propTypes = {
+  recipe: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default RecipeCard;
