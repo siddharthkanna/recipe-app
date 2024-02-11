@@ -14,7 +14,7 @@ const HomePage = () => {
     const fetchRecipes = async () => {
       try {
         const response = await axios.get(
-          `https://api.spoonacular.com/recipes/random?number=${recipesPerPage}&apiKey=036290102cc348f8a0f87f36e3c8c4aa&page=${
+          `https://api.spoonacular.com/recipes/random?number=${recipesPerPage}&apiKey=6636db675cef4614a09a8f16bc155d05&page=${
             currentPage + 1
           }`
         );

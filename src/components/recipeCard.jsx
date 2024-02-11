@@ -1,15 +1,55 @@
-import PropTypes from "prop-types"; 
-
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const RecipeCard = ({ recipe }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const toggleBookmark = () => {
-    setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          "http://localhost:3000/bookmark/getBookmarks",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const { bookmarks } = response.data;
+        setIsBookmarked(bookmarks.includes(recipe.id));
+      } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+      }
+    };
+
+    fetchBookmarks();
+  }, [recipe.id]);
+
+  const toggleBookmark = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:3000/bookmark/${recipe.id}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
+      } else {
+        console.error("Failed to toggle bookmark");
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error.message);
+    }
   };
 
   return (
@@ -48,7 +88,6 @@ const RecipeCard = ({ recipe }) => {
   );
 };
 
-// Add prop validation
 RecipeCard.propTypes = {
   recipe: PropTypes.shape({
     id: PropTypes.number.isRequired,

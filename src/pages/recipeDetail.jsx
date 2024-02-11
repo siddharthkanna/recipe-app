@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import Navbar from "../components/navbar";
+import { fetchRecipe } from "../api/recipeAPI";
+import axios from "axios";
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -12,24 +13,59 @@ const RecipeDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchRecipe = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.spoonacular.com/recipes/${id}/information?apiKey=036290102cc348f8a0f87f36e3c8c4aa`
-        );
-        setRecipe(response.data);
+        const recipeData = await fetchRecipe(id);
+        setRecipe(recipeData);
         setIsLoading(false);
+        checkBookmarkStatus();
       } catch (error) {
         console.error("Error fetching recipe:", error);
         setIsLoading(false);
       }
     };
 
-    fetchRecipe();
+    fetchData();
   }, [id]);
 
-  const toggleBookmark = () => {
-    setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
+  const checkBookmarkStatus = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `http://localhost:3000/bookmark/getBookmarks`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const { bookmarks } = response.data;
+      setIsBookmarked(bookmarks.includes(id));
+    } catch (error) {
+      console.error("Error checking bookmark status:", error);
+    }
+  };
+
+  const toggleBookmark = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        `http://localhost:3000/bookmark/${id}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
+      } else {
+        console.error("Failed to toggle bookmark");
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error.message);
+    }
   };
 
   if (isLoading) {
@@ -65,9 +101,9 @@ const RecipeDetailPage = () => {
               onClick={toggleBookmark}
             >
               {isBookmarked ? (
-                <FaRegBookmark size={24} className="text-white-500" />
-              ) : (
                 <FaBookmark size={24} className="text-white-500" />
+              ) : (
+                <FaRegBookmark size={24} className="text-white-500" />
               )}
             </div>
           </div>

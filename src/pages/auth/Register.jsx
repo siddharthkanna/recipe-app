@@ -1,6 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const Register = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/register",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        window.alert("Registration successful");
+        navigate("/");
+      } else {
+        throw new Error("Failed to register");
+      }
+    } catch (error) {
+      console.error("Registration error:", error.message);
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Left half with image */}
@@ -17,7 +51,7 @@ const Register = () => {
             Create an account
           </h2>
 
-          <form className="mt-10 space-y-6" action="#" method="POST">
+          <form className="mt-10 space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="name"
@@ -31,9 +65,12 @@ const Register = () => {
                   name="name"
                   type="text"
                   autoComplete="name"
-                  required
+                  {...register("name", { required: true })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-500">Name is required</p>
+                )}
               </div>
             </div>
 
@@ -50,9 +87,14 @@ const Register = () => {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  {...register("email", { required: true })}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.email ? "border-red-500" : ""
+                  }`}
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-500">Email is required</p>
+                )}
               </div>
             </div>
 
@@ -69,9 +111,45 @@ const Register = () => {
                   name="password"
                   type="password"
                   autoComplete="new-password"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  {...register("password", { required: true, minLength: 6 })}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.password ? "border-red-500" : ""
+                  }`}
                 />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-500">
+                    Password must be at least 6 characters long
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Phone number
+              </label>
+              <div className="mt-2">
+                <input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                  autoComplete="tel"
+                  {...register("phoneNumber", {
+                    required: true,
+                    pattern: /^\d{10}$/,
+                  })}
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.phoneNumber ? "border-red-500" : ""
+                  }`}
+                />
+                {errors.phoneNumber && (
+                  <p className="mt-1 text-sm text-red-500">
+                    Invalid phone number
+                  </p>
+                )}
               </div>
             </div>
 
