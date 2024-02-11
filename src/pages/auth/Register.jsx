@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { registerUser } from "../../api/authAPI";
 
 const Register = () => {
   const {
@@ -14,22 +14,9 @@ const Register = () => {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/auth/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 201) {
-        window.alert("Registration successful");
-        navigate("/");
-      } else {
-        throw new Error("Failed to register");
-      }
+      await registerUser(data);
+      window.alert("Registration successful");
+      navigate("/");
     } catch (error) {
       console.error("Registration error:", error.message);
     }

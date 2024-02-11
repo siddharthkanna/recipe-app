@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { checkBookmarkStatus, toggleBookmark } from "../api/bookmarkAPI";
 
 const RecipeCard = ({ recipe }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -11,17 +11,8 @@ const RecipeCard = ({ recipe }) => {
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          "http://localhost:3000/bookmark/getBookmarks",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { bookmarks } = response.data;
-        setIsBookmarked(bookmarks.includes(recipe.id));
+        const bookmarkStatus = await checkBookmarkStatus(recipe.id);
+        setIsBookmarked(bookmarkStatus);
       } catch (error) {
         console.error("Error fetching bookmarks:", error);
       }
@@ -30,23 +21,10 @@ const RecipeCard = ({ recipe }) => {
     fetchBookmarks();
   }, [recipe.id]);
 
-  const toggleBookmark = async () => {
+  const handleToggleBookmark = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `http://localhost:3000/bookmark/${recipe.id}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
-      } else {
-        console.error("Failed to toggle bookmark");
-      }
+      const success = await toggleBookmark(recipe.id);
+      setIsBookmarked(success);
     } catch (error) {
       console.error("Error toggling bookmark:", error.message);
     }
@@ -67,12 +45,12 @@ const RecipeCard = ({ recipe }) => {
           {isBookmarked ? (
             <FaBookmark
               className="text-gray-500 cursor-pointer"
-              onClick={toggleBookmark}
+              onClick={handleToggleBookmark}
             />
           ) : (
             <FaRegBookmark
               className="text-gray-500 cursor-pointer"
-              onClick={toggleBookmark}
+              onClick={handleToggleBookmark}
             />
           )}
         </div>

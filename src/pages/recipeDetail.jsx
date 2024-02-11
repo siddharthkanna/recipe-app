@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import Navbar from "../components/navbar";
+import { toggleBookmark, checkBookmarkStatus } from "../api/recipeAPI";
 import { fetchRecipe } from "../api/recipeAPI";
-import axios from "axios";
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -18,7 +18,8 @@ const RecipeDetailPage = () => {
         const recipeData = await fetchRecipe(id);
         setRecipe(recipeData);
         setIsLoading(false);
-        checkBookmarkStatus();
+        const bookmarkStatus = await checkBookmarkStatus(id);
+        setIsBookmarked(bookmarkStatus);
       } catch (error) {
         console.error("Error fetching recipe:", error);
         setIsLoading(false);
@@ -28,41 +29,10 @@ const RecipeDetailPage = () => {
     fetchData();
   }, [id]);
 
-  const checkBookmarkStatus = async () => {
+  const handleToggleBookmark = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `http://localhost:3000/bookmark/getBookmarks`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const { bookmarks } = response.data;
-      setIsBookmarked(bookmarks.includes(id));
-    } catch (error) {
-      console.error("Error checking bookmark status:", error);
-    }
-  };
-
-  const toggleBookmark = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `http://localhost:3000/bookmark/${id}`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setIsBookmarked((prevIsBookmarked) => !prevIsBookmarked);
-      } else {
-        console.error("Failed to toggle bookmark");
-      }
+      const success = await toggleBookmark(id);
+      setIsBookmarked(success);
     } catch (error) {
       console.error("Error toggling bookmark:", error.message);
     }
@@ -98,7 +68,7 @@ const RecipeDetailPage = () => {
             />
             <div
               className="absolute top-0 right-0 m-4 cursor-pointer"
-              onClick={toggleBookmark}
+              onClick={handleToggleBookmark}
             >
               {isBookmarked ? (
                 <FaBookmark size={24} className="text-white-500" />

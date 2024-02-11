@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { loginUser } from "../../api/authAPI";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,21 +13,11 @@ const Login = () => {
 
   const onSubmit = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (response.status === 200) {
-        const { token, user } = response.data;
-        localStorage.setItem("token", token);
-        localStorage.setItem("username", user.name);
-
-        window.alert("Login successful");
-        navigate("/home");
-      } else {
-        console.error("Login failed");
-      }
+      const { token, user } = await loginUser(formData);
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", user.name);
+      window.alert("Login successful");
+      navigate("/home");
     } catch (error) {
       console.error("Login error:", error.message);
     }

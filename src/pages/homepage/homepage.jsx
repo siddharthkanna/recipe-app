@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import ReactPaginate from "react-paginate";
 import RecipeCard from "../../components/recipeCard";
 import "./homepage.css";
 import Navbar from "../../components/navbar";
+import { fetchRecipes } from "../../api/recipeAPI";
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -11,22 +11,17 @@ const HomePage = () => {
   const recipesPerPage = 9;
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchRecipesData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.spoonacular.com/recipes/random?number=${recipesPerPage}&apiKey=6636db675cef4614a09a8f16bc155d05&page=${
-            currentPage + 1
-          }`
-        );
-        console.log(response.data.recipes);
-        setRecipes(response.data.recipes);
+        const recipesData = await fetchRecipes(currentPage, recipesPerPage);
+        setRecipes(recipesData);
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
     };
 
-    fetchRecipes();
-  }, [currentPage]);
+    fetchRecipesData();
+  }, [currentPage, recipesPerPage]);
 
   const handlePageClick = (data) => {
     const selectedPage = data.selected;

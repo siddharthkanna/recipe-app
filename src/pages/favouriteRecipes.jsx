@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../components/recipeCard";
 import Navbar from "../components/navbar";
-import axios from "axios";
 import { fetchRecipe } from "../api/recipeAPI";
+import { fetchBookmarks } from "../api/bookmarkAPI";
 
 const FavoriteRecipesPage = () => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
@@ -10,19 +10,8 @@ const FavoriteRecipesPage = () => {
   useEffect(() => {
     const fetchFavoriteRecipes = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:3000/bookmark/getBookmarks`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("Favorite Recipes Response:", response.data);
-        const { bookmarks } = response.data;
-
-        const recipeDetails = bookmarks.map(async (id) => {
+        const bookmarkIds = await fetchBookmarks();
+        const recipeDetails = bookmarkIds.map(async (id) => {
           try {
             return await fetchRecipe(id);
           } catch (error) {
