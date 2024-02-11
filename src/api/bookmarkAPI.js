@@ -19,7 +19,7 @@ export const fetchBookmarks = async () => {
 export const toggleBookmark = async (id) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.post(`${bookmarkURL}/bookmark/${id}`, null, {
+    const response = await axios.post(`${bookmarkURL}/${id}`, null, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -34,7 +34,7 @@ export const toggleBookmark = async (id) => {
 export const checkBookmarkStatus = async (id) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${bookmarkURL}/bookmark/getBookmarks`, {
+    const response = await axios.get(`${bookmarkURL}/getBookmarks`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

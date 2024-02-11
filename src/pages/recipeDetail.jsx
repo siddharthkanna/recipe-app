@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import Navbar from "../components/navbar";
-import { toggleBookmark, checkBookmarkStatus } from "../api/recipeAPI";
+import { toggleBookmark, checkBookmarkStatus } from "../api/bookmarkAPI";
 import { fetchRecipe } from "../api/recipeAPI";
 
 const RecipeDetailPage = () => {
