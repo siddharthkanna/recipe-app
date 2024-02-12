@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import RecipeCard from "../../components/recipeCard";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/navbar";
 import { fetchRecipe } from "../../api/recipeAPI";
 import { fetchFavourites } from "../../api/favouritesAPI";
 

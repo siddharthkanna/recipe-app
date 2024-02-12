@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/navbar";
 import { checkFavouriteStatus, toggleFavourite } from "../api/favouritesAPI";
 import { fetchRecipe } from "../api/recipeAPI";
 
