@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import RecipeCard from "../../components/recipeCard";
+import RecipeCard from "../../components/RecipeCard";
 import Navbar from "../../components/navbar";
 import { fetchRecipes } from "../../api/recipeAPI";
-import '../homepage/homepage.css';
+import "../homepage/homepage.css";
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -27,28 +27,26 @@ const HomePage = () => {
   }, [currentPage, recipesPerPage]);
 
   useEffect(() => {
-    filterRecipesByMealType(mealTypeFilter);
+    const filterRecipesByMealType = () => {
+      if (mealTypeFilter === "") {
+        setFilteredRecipes(recipes);
+      } else {
+        const filtered = recipes.filter((recipe) =>
+          recipe.dishTypes.includes(mealTypeFilter)
+        );
+        setFilteredRecipes(filtered);
+      }
+    };
+
+    filterRecipesByMealType();
   }, [mealTypeFilter, recipes]);
 
   const handlePageClick = (data) => {
-    const selectedPage = data.selected;
-    setCurrentPage(selectedPage);
-  };
-
-  const filterRecipesByMealType = (mealType) => {
-    if (mealType === "") {
-      setFilteredRecipes(recipes);
-    } else {
-      const filtered = recipes.filter((recipe) =>
-        recipe.dishTypes.includes(mealType)
-      );
-      setFilteredRecipes(filtered);
-    }
+    setCurrentPage(data.selected);
   };
 
   const handleMealTypeChange = (event) => {
-    const type = event.target.value;
-    setMealTypeFilter(type);
+    setMealTypeFilter(event.target.value);
   };
 
   return (
@@ -74,10 +72,10 @@ const HomePage = () => {
         </div>
         <div className="flex justify-center mt-10">
           <ReactPaginate
-            pageCount={10} 
-            onPageChange={handlePageClick} 
-            containerClassName={"pagination"}
-            activeClassName={"active"}
+            pageCount={10}
+            onPageChange={handlePageClick}
+            containerClassName="pagination"
+            activeClassName="active"
           />
         </div>
       </div>

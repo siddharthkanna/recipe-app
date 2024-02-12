@@ -1,11 +1,21 @@
 import { useState, useEffect } from "react";
-import RecipeCard from "../components/recipeCard";
+import RecipeCard from "../components/RecipeCard";
 import Navbar from "../components/navbar";
 import { fetchRecipe } from "../api/recipeAPI";
 import { fetchFavourites } from "../api/favouritesAPI";
 
 const FavoriteRecipesPage = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
+
+  useEffect(() => {
+    const checkLoggedInStatus = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    };
+
+    checkLoggedInStatus();
+  }, []);
 
   useEffect(() => {
     const fetchFavoriteRecipes = async () => {
@@ -26,8 +36,10 @@ const FavoriteRecipesPage = () => {
       }
     };
 
-    fetchFavoriteRecipes();
-  }, []);
+    if (isLoggedIn) {
+      fetchFavoriteRecipes();
+    }
+  }, [isLoggedIn]);
 
   return (
     <div>
@@ -36,7 +48,12 @@ const FavoriteRecipesPage = () => {
         <h1 className="text-4xl font-bold text-center mb-16">
           Favorite Recipes
         </h1>
-        {favoriteRecipes.length === 0 ? (
+        {!isLoggedIn && (
+          <div className="text-center text-gray-600">
+            User must be logged in to view this page
+          </div>
+        )}
+        {isLoggedIn && favoriteRecipes.length === 0 ? (
           <div className="text-center text-gray-600">No favorite recipes</div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12">

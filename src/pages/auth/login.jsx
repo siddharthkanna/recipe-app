@@ -20,6 +20,7 @@ const Login = () => {
       navigate("/home");
     } catch (error) {
       console.error("Login error:", error.message);
+      window.alert("Email or password is wrong");
     }
   };
 
