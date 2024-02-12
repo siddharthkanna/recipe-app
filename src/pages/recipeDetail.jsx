@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import Navbar from "../components/navbar";
-import { toggleBookmark, checkBookmarkStatus } from "../api/bookmarkAPI";
+import { checkFavouriteStatus, toggleFavourite } from "../api/favouritesAPI";
 import { fetchRecipe } from "../api/recipeAPI";
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,8 +18,8 @@ const RecipeDetailPage = () => {
         const recipeData = await fetchRecipe(id);
         setRecipe(recipeData);
         setIsLoading(false);
-        const bookmarkStatus = await checkBookmarkStatus(id);
-        setIsBookmarked(bookmarkStatus);
+        const favouriteStatus = await checkFavouriteStatus(id);
+        setIsFavourite(favouriteStatus);
       } catch (error) {
         console.error("Error fetching recipe:", error);
         setIsLoading(false);
@@ -29,10 +29,10 @@ const RecipeDetailPage = () => {
     fetchData();
   }, [id]);
 
-  const handleToggleBookmark = async () => {
+  const handleToggleFavourite = async () => {
     try {
-      const success = await toggleBookmark(id);
-      setIsBookmarked(success);
+      const success = await toggleFavourite(id);
+      setIsFavourite(success);
     } catch (error) {
       console.error("Error toggling bookmark:", error.message);
     }
@@ -68,12 +68,12 @@ const RecipeDetailPage = () => {
             />
             <div
               className="absolute top-0 right-0 m-4 cursor-pointer"
-              onClick={handleToggleBookmark}
+              onClick={handleToggleFavourite}
             >
-              {isBookmarked ? (
-                <FaBookmark size={24} className="text-white-500" />
+              {isFavourite ? (
+                <IoMdHeart size={24} className="text-white-500" />
               ) : (
-                <FaRegBookmark size={24} className="text-white-500" />
+                <IoMdHeartEmpty size={24} className="text-white-500" />
               )}
             </div>
           </div>

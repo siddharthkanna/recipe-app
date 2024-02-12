@@ -1,30 +1,35 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { parseHTML } from "../utils/parser";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import { useState, useEffect } from "react";
-import { checkBookmarkStatus, toggleBookmark } from "../api/bookmarkAPI";
+import { checkFavouriteStatus, toggleFavourite } from "../api/favouritesAPI";
 
 const RecipeCard = ({ recipe }) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
-    const fetchBookmarks = async () => {
+    const fetchFavourites = async () => {
       try {
-        const bookmarkStatus = await checkBookmarkStatus(recipe.id);
-        setIsBookmarked(bookmarkStatus);
+        const favouriteStatus = await checkFavouriteStatus(recipe.id);
+        setIsFavourite(favouriteStatus);
       } catch (error) {
-        console.error("Error fetching bookmarks:", error);
+        console.error("Error fetching Favourites:", error);
       }
     };
 
-    fetchBookmarks();
+    fetchFavourites();
   }, [recipe.id]);
 
-  const handleToggleBookmark = async () => {
+  const handleToggleFavourites = async () => {
     try {
-      const success = await toggleBookmark(recipe.id);
-      setIsBookmarked(success);
+      if (isFavourite) {
+        await toggleFavourite(recipe.id);
+        setIsFavourite(false);
+      } else {
+        const success = await toggleFavourite(recipe.id);
+        setIsFavourite(success);
+      }
     } catch (error) {
       console.error("Error toggling bookmark:", error.message);
     }
@@ -42,15 +47,15 @@ const RecipeCard = ({ recipe }) => {
           <h2 className="text-xl font-semibold text-gray-800">
             {recipe.title}
           </h2>
-          {isBookmarked ? (
-            <FaBookmark
+          {isFavourite ? (
+            <IoMdHeart
               className="text-gray-500 cursor-pointer"
-              onClick={handleToggleBookmark}
+              onClick={handleToggleFavourites}
             />
           ) : (
-            <FaRegBookmark
+            <IoMdHeartEmpty
               className="text-gray-500 cursor-pointer"
-              onClick={handleToggleBookmark}
+              onClick={handleToggleFavourites}
             />
           )}
         </div>

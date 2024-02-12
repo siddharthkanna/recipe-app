@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import RecipeCard from "../components/recipeCard";
 import Navbar from "../components/navbar";
 import { fetchRecipe } from "../api/recipeAPI";
-import { fetchBookmarks } from "../api/bookmarkAPI";
+import { fetchFavourites } from "../api/favouritesAPI";
 
 const FavoriteRecipesPage = () => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
@@ -10,8 +10,8 @@ const FavoriteRecipesPage = () => {
   useEffect(() => {
     const fetchFavoriteRecipes = async () => {
       try {
-        const bookmarkIds = await fetchBookmarks();
-        const recipeDetails = bookmarkIds.map(async (id) => {
+        const favouriteIds = await fetchFavourites();
+        const recipeDetails = favouriteIds.map(async (id) => {
           try {
             return await fetchRecipe(id);
           } catch (error) {
