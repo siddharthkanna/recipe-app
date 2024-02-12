@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import RecipeCard from "../../components/RecipeCard";
+import RecipeCard from "../../components/recipeCard";
 import Navbar from "../../components/Navbar";
 import { fetchRecipe } from "../../api/recipeAPI";
 import { fetchFavourites } from "../../api/favouritesAPI";

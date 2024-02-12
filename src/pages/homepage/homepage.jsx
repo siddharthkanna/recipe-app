@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-import RecipeCard from "../../components/RecipeCard";
+import RecipeCard from "../../components/recipeCard";
 import Navbar from "../../components/Navbar";
 import { fetchRecipes } from "../../api/recipeAPI";
 import "../homepage/homepage.css";
