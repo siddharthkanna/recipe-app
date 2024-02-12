@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { searchRecipes } from "../api/recipeAPI";
+import { HiHome, HiHeart, HiLogout, HiMenu } from "react-icons/hi";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const name = localStorage.getItem("username");
 
@@ -35,16 +37,30 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <nav className="bg-gray-800 shadow">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 hidden md:block">
             <Link to="/" className="text-white font-bold text-lg">
               Recipe App
             </Link>
           </div>
-          <div className="hidden md:block relative">
+          <div className="md:hidden">
+            <button
+              className="text-white p-2 focus:outline-none"
+              onClick={toggleMenu}
+            >
+              <HiMenu />
+            </button>
+          </div>
+          <div
+            className={`${isMenuOpen ? "block" : "hidden"} md:block relative`}
+          >
             <div className="ml-4 flex items-center md:ml-6">
               <input
                 type="text"
@@ -53,7 +69,6 @@ const Navbar = () => {
                 placeholder="Search recipes"
                 className="bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               />
-
               {searchResults.length > 0 && (
                 <div className="absolute z-10 mt-48 bg-white border rounded-md shadow-lg w-full max-w-md">
                   {searchResults.map((result) => (
@@ -68,25 +83,25 @@ const Navbar = () => {
                   ))}
                 </div>
               )}
-              {name && <p className="text-white mr-4">Hi, {name}</p>}
+              {name && <p className="text-white mr-4 hidden md:block">Hi, {name}</p>}
               <Link
                 to="/home"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded-md text-lg "
               >
-                Home
+                <HiHome />
               </Link>
               <Link
                 to="/favoriteRecipes"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-gray-300 hover:bg-gray-700  px-3 py-2 rounded-md text-lg "
               >
-                Your Favourites
+                <HiHeart />
               </Link>
               <Link
                 to="/"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="text-gray-300 hover:bg-gray-700  px-3 py-2 rounded-md text-lg "
                 onClick={handleLogout}
               >
-                Logout
+                <HiLogout />
               </Link>
             </div>
           </div>
