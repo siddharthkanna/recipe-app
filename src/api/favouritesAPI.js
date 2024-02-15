@@ -1,5 +1,5 @@
 import axios from "axios";
-import { favouriteURL } from "../constants/urls";
+import { favouriteURL } from "../config/urls";
 
 export const fetchFavourites = async () => {
   try {

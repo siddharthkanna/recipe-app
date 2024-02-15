@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authURL } from "../constants/urls";
+import { authURL } from "../config/urls";
 
 export const loginUser = async (formData) => {
   try {

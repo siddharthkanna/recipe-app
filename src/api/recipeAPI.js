@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiKey, recipeURL } from "../constants/urls";
+import { apiKey, recipeURL } from "../config/urls";
 
 export const fetchRecipe = async (id) => {
   try {
