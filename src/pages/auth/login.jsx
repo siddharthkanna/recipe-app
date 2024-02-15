@@ -29,12 +29,15 @@ const Login = () => {
       <div
         className="flex-1 bg-cover bg-center hidden sm:block"
         style={{
-          backgroundImage: `url('https://img.freepik.com/free-photo/top-view-delicious-mayyonaise-salad-with-greens-vegetables-dark-space_140725-75694.jpg')`,
+          backgroundImage: `url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHJlY2lwZXxlbnwwfHwwfHx8MA%3D%3D')`,
         }}
       ></div>
 
       <div className="flex-1 flex items-center justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h3 className="mt-10 text-center text-3xl font-bold leading-9 tracking-tight text-gray-900">
+            RecipeFind
+          </h3>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
